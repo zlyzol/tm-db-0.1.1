@@ -15,7 +15,7 @@ import (
 var bucket = []byte("tm")
 
 func init() {
-	registerDBCreator(BoltDBBackend, func(name, dir string) (DBMoj, error) {
+	registerDBCreator(BoltDBBackend, func(name, dir string) (DB, error) {
 		return NewBoltDB(name, dir)
 	}, false)
 }
@@ -29,17 +29,17 @@ func init() {
 // A single bucket ([]byte("tm")) is used per a database instance. This could
 // lead to performance issues when/if there will be lots of keys.
 type BoltDB struct {
-	db *bbolt.DBMoj
+	db *bbolt.DB
 }
 
 // NewBoltDB returns a BoltDB with default options.
-func NewBoltDB(name, dir string) (DBMoj, error) {
+func NewBoltDB(name, dir string) (DB, error) {
 	return NewBoltDBWithOpts(name, dir, bbolt.DefaultOptions)
 }
 
 // NewBoltDBWithOpts allows you to supply *bbolt.Options. ReadOnly: true is not
 // supported because NewBoltDBWithOpts creates a global bucket.
-func NewBoltDBWithOpts(name string, dir string, opts *bbolt.Options) (DBMoj, error) {
+func NewBoltDBWithOpts(name string, dir string, opts *bbolt.Options) (DB, error) {
 	if opts.ReadOnly {
 		return nil, errors.New("ReadOnly: true is not supported")
 	}
@@ -149,7 +149,7 @@ func (bdb *BoltDB) Stats() map[string]string {
 }
 
 // boltDBBatch stores key values in sync.Map and dumps them to the underlying
-// DBMoj upon Write call.
+// DB upon Write call.
 type boltDBBatch struct {
 	db  *BoltDB
 	ops []operation

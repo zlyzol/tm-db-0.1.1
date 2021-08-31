@@ -56,7 +56,7 @@ func TestBackendsGetSetDelete(t *testing.T) {
 	}
 }
 
-func withDB(t *testing.T, creator dbCreator, fn func(DBMoj)) {
+func withDB(t *testing.T, creator dbCreator, fn func(DB)) {
 	name := fmt.Sprintf("test_%x", randStr(12))
 	dir := os.TempDir()
 	db, err := creator(name, dir)
@@ -70,7 +70,7 @@ func TestBackendsNilKeys(t *testing.T) {
 
 	// Test all backends.
 	for dbType, creator := range backends {
-		withDB(t, creator, func(db DBMoj) {
+		withDB(t, creator, func(db DB) {
 			t.Run(fmt.Sprintf("Testing %s", dbType), func(t *testing.T) {
 
 				// Nil keys are treated as the empty key for most operations.

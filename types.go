@@ -1,7 +1,7 @@
 package db
 
 // DBs are goroutine safe.
-type DBMoj interface {
+type DB interface {
 
 	// Get returns nil iff key doesn't exist.
 	// A nil key is interpreted as an empty byteslice.

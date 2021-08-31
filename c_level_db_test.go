@@ -90,7 +90,7 @@ func bytes2Int64(buf []byte) int64 {
 func TestCLevelDBBackend(t *testing.T) {
 	name := fmt.Sprintf("test_%x", randStr(12))
 	// Can't use "" (current directory) or "./" here because levigo.Open returns:
-	// "Error initializing DBMoj: IO error: test_XXX.db: Invalid argument"
+	// "Error initializing DB: IO error: test_XXX.db: Invalid argument"
 	dir := os.TempDir()
 	db := NewDB(name, CLevelDBBackend, dir)
 	defer cleanupDBDir(dir, name)

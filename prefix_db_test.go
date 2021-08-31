@@ -2,7 +2,7 @@ package db
 
 import "testing"
 
-func mockDBWithStuff() DBMoj {
+func mockDBWithStuff() DB {
 	db := NewMemDB()
 	// Under "key" prefix
 	db.Set(bz("key"), bz("value"))

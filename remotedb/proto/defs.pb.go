@@ -320,7 +320,7 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// Client API for DBMoj service
+// Client API for DB service
 
 type DBClient interface {
 	Init(ctx context.Context, in *Init, opts ...grpc.CallOption) (*Entity, error)
@@ -349,7 +349,7 @@ func NewDBClient(cc *grpc.ClientConn) DBClient {
 
 func (c *dBClient) Init(ctx context.Context, in *Init, opts ...grpc.CallOption) (*Entity, error) {
 	out := new(Entity)
-	err := grpc.Invoke(ctx, "/protodb.DBMoj/init", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/protodb.DB/init", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -358,7 +358,7 @@ func (c *dBClient) Init(ctx context.Context, in *Init, opts ...grpc.CallOption) 
 
 func (c *dBClient) Get(ctx context.Context, in *Entity, opts ...grpc.CallOption) (*Entity, error) {
 	out := new(Entity)
-	err := grpc.Invoke(ctx, "/protodb.DBMoj/get", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/protodb.DB/get", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -366,7 +366,7 @@ func (c *dBClient) Get(ctx context.Context, in *Entity, opts ...grpc.CallOption)
 }
 
 func (c *dBClient) GetStream(ctx context.Context, opts ...grpc.CallOption) (DB_GetStreamClient, error) {
-	stream, err := grpc.NewClientStream(ctx, &_DB_serviceDesc.Streams[0], c.cc, "/protodb.DBMoj/getStream", opts...)
+	stream, err := grpc.NewClientStream(ctx, &_DB_serviceDesc.Streams[0], c.cc, "/protodb.DB/getStream", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -398,7 +398,7 @@ func (x *dBGetStreamClient) Recv() (*Entity, error) {
 
 func (c *dBClient) Has(ctx context.Context, in *Entity, opts ...grpc.CallOption) (*Entity, error) {
 	out := new(Entity)
-	err := grpc.Invoke(ctx, "/protodb.DBMoj/has", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/protodb.DB/has", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -407,7 +407,7 @@ func (c *dBClient) Has(ctx context.Context, in *Entity, opts ...grpc.CallOption)
 
 func (c *dBClient) Set(ctx context.Context, in *Entity, opts ...grpc.CallOption) (*Nothing, error) {
 	out := new(Nothing)
-	err := grpc.Invoke(ctx, "/protodb.DBMoj/set", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/protodb.DB/set", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -416,7 +416,7 @@ func (c *dBClient) Set(ctx context.Context, in *Entity, opts ...grpc.CallOption)
 
 func (c *dBClient) SetSync(ctx context.Context, in *Entity, opts ...grpc.CallOption) (*Nothing, error) {
 	out := new(Nothing)
-	err := grpc.Invoke(ctx, "/protodb.DBMoj/setSync", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/protodb.DB/setSync", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -425,7 +425,7 @@ func (c *dBClient) SetSync(ctx context.Context, in *Entity, opts ...grpc.CallOpt
 
 func (c *dBClient) Delete(ctx context.Context, in *Entity, opts ...grpc.CallOption) (*Nothing, error) {
 	out := new(Nothing)
-	err := grpc.Invoke(ctx, "/protodb.DBMoj/delete", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/protodb.DB/delete", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -434,7 +434,7 @@ func (c *dBClient) Delete(ctx context.Context, in *Entity, opts ...grpc.CallOpti
 
 func (c *dBClient) DeleteSync(ctx context.Context, in *Entity, opts ...grpc.CallOption) (*Nothing, error) {
 	out := new(Nothing)
-	err := grpc.Invoke(ctx, "/protodb.DBMoj/deleteSync", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/protodb.DB/deleteSync", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -442,7 +442,7 @@ func (c *dBClient) DeleteSync(ctx context.Context, in *Entity, opts ...grpc.Call
 }
 
 func (c *dBClient) Iterator(ctx context.Context, in *Entity, opts ...grpc.CallOption) (DB_IteratorClient, error) {
-	stream, err := grpc.NewClientStream(ctx, &_DB_serviceDesc.Streams[1], c.cc, "/protodb.DBMoj/iterator", opts...)
+	stream, err := grpc.NewClientStream(ctx, &_DB_serviceDesc.Streams[1], c.cc, "/protodb.DB/iterator", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -474,7 +474,7 @@ func (x *dBIteratorClient) Recv() (*Iterator, error) {
 }
 
 func (c *dBClient) ReverseIterator(ctx context.Context, in *Entity, opts ...grpc.CallOption) (DB_ReverseIteratorClient, error) {
-	stream, err := grpc.NewClientStream(ctx, &_DB_serviceDesc.Streams[2], c.cc, "/protodb.DBMoj/reverseIterator", opts...)
+	stream, err := grpc.NewClientStream(ctx, &_DB_serviceDesc.Streams[2], c.cc, "/protodb.DB/reverseIterator", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -507,7 +507,7 @@ func (x *dBReverseIteratorClient) Recv() (*Iterator, error) {
 
 func (c *dBClient) Stats(ctx context.Context, in *Nothing, opts ...grpc.CallOption) (*Stats, error) {
 	out := new(Stats)
-	err := grpc.Invoke(ctx, "/protodb.DBMoj/stats", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/protodb.DB/stats", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -516,7 +516,7 @@ func (c *dBClient) Stats(ctx context.Context, in *Nothing, opts ...grpc.CallOpti
 
 func (c *dBClient) BatchWrite(ctx context.Context, in *Batch, opts ...grpc.CallOption) (*Nothing, error) {
 	out := new(Nothing)
-	err := grpc.Invoke(ctx, "/protodb.DBMoj/batchWrite", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/protodb.DB/batchWrite", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -525,14 +525,14 @@ func (c *dBClient) BatchWrite(ctx context.Context, in *Batch, opts ...grpc.CallO
 
 func (c *dBClient) BatchWriteSync(ctx context.Context, in *Batch, opts ...grpc.CallOption) (*Nothing, error) {
 	out := new(Nothing)
-	err := grpc.Invoke(ctx, "/protodb.DBMoj/batchWriteSync", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/protodb.DB/batchWriteSync", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// Server API for DBMoj service
+// Server API for DB service
 
 type DBServer interface {
 	Init(context.Context, *Init) (*Entity, error)
@@ -565,7 +565,7 @@ func _DB_Init_Handler(srv interface{}, ctx context.Context, dec func(interface{}
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protodb.DBMoj/Init",
+		FullMethod: "/protodb.DB/Init",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DBServer).Init(ctx, req.(*Init))
@@ -583,7 +583,7 @@ func _DB_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{})
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protodb.DBMoj/Get",
+		FullMethod: "/protodb.DB/Get",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DBServer).Get(ctx, req.(*Entity))
@@ -627,7 +627,7 @@ func _DB_Has_Handler(srv interface{}, ctx context.Context, dec func(interface{})
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protodb.DBMoj/Has",
+		FullMethod: "/protodb.DB/Has",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DBServer).Has(ctx, req.(*Entity))
@@ -645,7 +645,7 @@ func _DB_Set_Handler(srv interface{}, ctx context.Context, dec func(interface{})
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protodb.DBMoj/Set",
+		FullMethod: "/protodb.DB/Set",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DBServer).Set(ctx, req.(*Entity))
@@ -663,7 +663,7 @@ func _DB_SetSync_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protodb.DBMoj/SetSync",
+		FullMethod: "/protodb.DB/SetSync",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DBServer).SetSync(ctx, req.(*Entity))
@@ -681,7 +681,7 @@ func _DB_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protodb.DBMoj/Delete",
+		FullMethod: "/protodb.DB/Delete",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DBServer).Delete(ctx, req.(*Entity))
@@ -699,7 +699,7 @@ func _DB_DeleteSync_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protodb.DBMoj/DeleteSync",
+		FullMethod: "/protodb.DB/DeleteSync",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DBServer).DeleteSync(ctx, req.(*Entity))
@@ -759,7 +759,7 @@ func _DB_Stats_Handler(srv interface{}, ctx context.Context, dec func(interface{
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protodb.DBMoj/Stats",
+		FullMethod: "/protodb.DB/Stats",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DBServer).Stats(ctx, req.(*Nothing))
@@ -777,7 +777,7 @@ func _DB_BatchWrite_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protodb.DBMoj/BatchWrite",
+		FullMethod: "/protodb.DB/BatchWrite",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DBServer).BatchWrite(ctx, req.(*Batch))
@@ -795,7 +795,7 @@ func _DB_BatchWriteSync_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protodb.DBMoj/BatchWriteSync",
+		FullMethod: "/protodb.DB/BatchWriteSync",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DBServer).BatchWriteSync(ctx, req.(*Batch))
@@ -804,7 +804,7 @@ func _DB_BatchWriteSync_Handler(srv interface{}, ctx context.Context, dec func(i
 }
 
 var _DB_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "protodb.DBMoj",
+	ServiceName: "protodb.DB",
 	HandlerType: (*DBServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

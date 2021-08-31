@@ -52,7 +52,7 @@ message Init {
   string Dir  = 3;
 }
 
-service DBMoj {
+service DB {
   rpc init(Init) returns (Entity) {}
   rpc get(Entity) returns (Entity) {}
   rpc getStream(stream Entity) returns (stream Entity) {}

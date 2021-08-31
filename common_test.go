@@ -16,7 +16,7 @@ import (
 //----------------------------------------
 // Helper functions.
 
-func checkValue(t *testing.T, db DBMoj, key []byte, valueWanted []byte) {
+func checkValue(t *testing.T, db DB, key []byte, valueWanted []byte) {
 	valueGot := db.Get(key)
 	assert.Equal(t, valueWanted, valueGot)
 }
@@ -63,7 +63,7 @@ func checkValuePanics(t *testing.T, itr Iterator) {
 	assert.Panics(t, func() { itr.Value() }, "checkValuePanics expected panic but didn't")
 }
 
-func newTempDB(t *testing.T, backend DBBackendType) (db DBMoj, dbDir string) {
+func newTempDB(t *testing.T, backend DBBackendType) (db DB, dbDir string) {
 	dirname, err := ioutil.TempDir("", "db_common_test")
 	require.Nil(t, err)
 	return NewDB("testdb", backend, dirname), dirname
@@ -192,7 +192,7 @@ func (mockIterator) Value() []byte {
 func (mockIterator) Close() {
 }
 
-func benchmarkRandomReadsWrites(b *testing.B, db DBMoj) {
+func benchmarkRandomReadsWrites(b *testing.B, db DB) {
 	b.StopTimer()
 
 	// create dummy data

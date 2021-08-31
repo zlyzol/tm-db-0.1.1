@@ -7,12 +7,12 @@ import (
 )
 
 func init() {
-	registerDBCreator(MemDBBackend, func(name, dir string) (DBMoj, error) {
+	registerDBCreator(MemDBBackend, func(name, dir string) (DB, error) {
 		return NewMemDB(), nil
 	}, false)
 }
 
-var _ DBMoj = (*MemDB)(nil)
+var _ DB = (*MemDB)(nil)
 
 type MemDB struct {
 	mtx sync.Mutex
@@ -31,7 +31,7 @@ func (db *MemDB) Mutex() *sync.Mutex {
 	return &(db.mtx)
 }
 
-// Implements DBMoj.
+// Implements DB.
 func (db *MemDB) Get(key []byte) []byte {
 	db.mtx.Lock()
 	defer db.mtx.Unlock()
@@ -41,7 +41,7 @@ func (db *MemDB) Get(key []byte) []byte {
 	return value
 }
 
-// Implements DBMoj.
+// Implements DB.
 func (db *MemDB) Has(key []byte) bool {
 	db.mtx.Lock()
 	defer db.mtx.Unlock()
@@ -51,7 +51,7 @@ func (db *MemDB) Has(key []byte) bool {
 	return ok
 }
 
-// Implements DBMoj.
+// Implements DB.
 func (db *MemDB) Set(key []byte, value []byte) {
 	db.mtx.Lock()
 	defer db.mtx.Unlock()
@@ -59,7 +59,7 @@ func (db *MemDB) Set(key []byte, value []byte) {
 	db.SetNoLock(key, value)
 }
 
-// Implements DBMoj.
+// Implements DB.
 func (db *MemDB) SetSync(key []byte, value []byte) {
 	db.mtx.Lock()
 	defer db.mtx.Unlock()
@@ -80,7 +80,7 @@ func (db *MemDB) SetNoLockSync(key []byte, value []byte) {
 	db.db[string(key)] = value
 }
 
-// Implements DBMoj.
+// Implements DB.
 func (db *MemDB) Delete(key []byte) {
 	db.mtx.Lock()
 	defer db.mtx.Unlock()
@@ -88,7 +88,7 @@ func (db *MemDB) Delete(key []byte) {
 	db.DeleteNoLock(key)
 }
 
-// Implements DBMoj.
+// Implements DB.
 func (db *MemDB) DeleteSync(key []byte) {
 	db.mtx.Lock()
 	defer db.mtx.Unlock()
@@ -108,7 +108,7 @@ func (db *MemDB) DeleteNoLockSync(key []byte) {
 	delete(db.db, string(key))
 }
 
-// Implements DBMoj.
+// Implements DB.
 func (db *MemDB) Close() {
 	// Close is a noop since for an in-memory
 	// database, we don't have a destination
@@ -117,7 +117,7 @@ func (db *MemDB) Close() {
 	// See the discussion in https://github.com/tendermint/tendermint/libs/pull/56
 }
 
-// Implements DBMoj.
+// Implements DB.
 func (db *MemDB) Print() {
 	db.mtx.Lock()
 	defer db.mtx.Unlock()
@@ -127,7 +127,7 @@ func (db *MemDB) Print() {
 	}
 }
 
-// Implements DBMoj.
+// Implements DB.
 func (db *MemDB) Stats() map[string]string {
 	db.mtx.Lock()
 	defer db.mtx.Unlock()
@@ -138,7 +138,7 @@ func (db *MemDB) Stats() map[string]string {
 	return stats
 }
 
-// Implements DBMoj.
+// Implements DB.
 func (db *MemDB) NewBatch() Batch {
 	db.mtx.Lock()
 	defer db.mtx.Unlock()
@@ -149,7 +149,7 @@ func (db *MemDB) NewBatch() Batch {
 //----------------------------------------
 // Iterator
 
-// Implements DBMoj.
+// Implements DB.
 func (db *MemDB) Iterator(start, end []byte) Iterator {
 	db.mtx.Lock()
 	defer db.mtx.Unlock()
@@ -158,7 +158,7 @@ func (db *MemDB) Iterator(start, end []byte) Iterator {
 	return newMemDBIterator(db, keys, start, end)
 }
 
-// Implements DBMoj.
+// Implements DB.
 func (db *MemDB) ReverseIterator(start, end []byte) Iterator {
 	db.mtx.Lock()
 	defer db.mtx.Unlock()
@@ -170,7 +170,7 @@ func (db *MemDB) ReverseIterator(start, end []byte) Iterator {
 // We need a copy of all of the keys.
 // Not the best, but probably not a bottleneck depending.
 type memDBIterator struct {
-	db    DBMoj
+	db    DB
 	cur   int
 	keys  []string
 	start []byte
@@ -180,7 +180,7 @@ type memDBIterator struct {
 var _ Iterator = (*memDBIterator)(nil)
 
 // Keys is expected to be in reverse order for reverse iterators.
-func newMemDBIterator(db DBMoj, keys []string, start, end []byte) *memDBIterator {
+func newMemDBIterator(db DB, keys []string, start, end []byte) *memDBIterator {
 	return &memDBIterator{
 		db:    db,
 		cur:   0,
