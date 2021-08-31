@@ -11,16 +11,16 @@ import (
 )
 
 func init() {
-	dbCreator := func(name string, dir string) (DB, error) {
+	dbCreator := func(name string, dir string) (DBMoj, error) {
 		return NewCLevelDB(name, dir)
 	}
 	registerDBCreator(CLevelDBBackend, dbCreator, false)
 }
 
-var _ DB = (*CLevelDB)(nil)
+var _ DBMoj = (*CLevelDB)(nil)
 
 type CLevelDB struct {
-	db     *levigo.DB
+	db     *levigo.DBMoj
 	ro     *levigo.ReadOptions
 	wo     *levigo.WriteOptions
 	woSync *levigo.WriteOptions
@@ -49,7 +49,7 @@ func NewCLevelDB(name string, dir string) (*CLevelDB, error) {
 	return database, nil
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (db *CLevelDB) Get(key []byte) []byte {
 	key = nonNilBytes(key)
 	res, err := db.db.Get(db.ro, key)
@@ -59,12 +59,12 @@ func (db *CLevelDB) Get(key []byte) []byte {
 	return res
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (db *CLevelDB) Has(key []byte) bool {
 	return db.Get(key) != nil
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (db *CLevelDB) Set(key []byte, value []byte) {
 	key = nonNilBytes(key)
 	value = nonNilBytes(value)
@@ -74,7 +74,7 @@ func (db *CLevelDB) Set(key []byte, value []byte) {
 	}
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (db *CLevelDB) SetSync(key []byte, value []byte) {
 	key = nonNilBytes(key)
 	value = nonNilBytes(value)
@@ -84,7 +84,7 @@ func (db *CLevelDB) SetSync(key []byte, value []byte) {
 	}
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (db *CLevelDB) Delete(key []byte) {
 	key = nonNilBytes(key)
 	err := db.db.Delete(db.wo, key)
@@ -93,7 +93,7 @@ func (db *CLevelDB) Delete(key []byte) {
 	}
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (db *CLevelDB) DeleteSync(key []byte) {
 	key = nonNilBytes(key)
 	err := db.db.Delete(db.woSync, key)
@@ -102,11 +102,11 @@ func (db *CLevelDB) DeleteSync(key []byte) {
 	}
 }
 
-func (db *CLevelDB) DB() *levigo.DB {
+func (db *CLevelDB) DBMoj() *levigo.DBMoj {
 	return db.db
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (db *CLevelDB) Close() {
 	db.db.Close()
 	db.ro.Close()
@@ -114,7 +114,7 @@ func (db *CLevelDB) Close() {
 	db.woSync.Close()
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (db *CLevelDB) Print() {
 	itr := db.Iterator(nil, nil)
 	defer itr.Close()
@@ -125,7 +125,7 @@ func (db *CLevelDB) Print() {
 	}
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (db *CLevelDB) Stats() map[string]string {
 	keys := []string{
 		"leveldb.aliveiters",
@@ -149,7 +149,7 @@ func (db *CLevelDB) Stats() map[string]string {
 //----------------------------------------
 // Batch
 
-// Implements DB.
+// Implements DBMoj.
 func (db *CLevelDB) NewBatch() Batch {
 	batch := levigo.NewWriteBatch()
 	return &cLevelDBBatch{db, batch}
@@ -257,7 +257,7 @@ func (itr cLevelDBIterator) Valid() bool {
 		return false
 	}
 
-	// Panic on DB error.  No way to recover.
+	// Panic on DBMoj error.  No way to recover.
 	itr.assertNoError()
 
 	// If source is invalid, invalid.

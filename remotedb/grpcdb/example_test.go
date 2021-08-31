@@ -25,7 +25,7 @@ func Example() {
 	}
 
 	ctx := context.Background()
-	// 1. Initialize the DB
+	// 1. Initialize the DBMoj
 	in := &protodb.Init{
 		Type: "leveldb",
 		Name: "grpc-uno-test",

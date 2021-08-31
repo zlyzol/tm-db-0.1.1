@@ -36,7 +36,7 @@ func (rd *RemoteDB) InitRemote(in *Init) error {
 	return err
 }
 
-var _ db.DB = (*RemoteDB)(nil)
+var _ db.DBMoj = (*RemoteDB)(nil)
 
 // Close is a noop currently
 func (rd *RemoteDB) Close() {
@@ -97,7 +97,7 @@ func (rd *RemoteDB) NewBatch() db.Batch {
 	}
 }
 
-// TODO: Implement Print when db.DB implements a method
+// TODO: Implement Print when db.DBMoj implements a method
 // to print to a string and not db.Print to stdout.
 func (rd *RemoteDB) Print() {
 	panic("Unimplemented")

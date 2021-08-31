@@ -8,7 +8,7 @@ import (
 
 // IteratePrefix is a convenience function for iterating over a key domain
 // restricted by prefix.
-func IteratePrefix(db DB, prefix []byte) Iterator {
+func IteratePrefix(db DBMoj, prefix []byte) Iterator {
 	var start, end []byte
 	if len(prefix) == 0 {
 		start = nil
@@ -23,7 +23,7 @@ func IteratePrefix(db DB, prefix []byte) Iterator {
 /*
 TODO: Make test, maybe rename.
 // Like IteratePrefix but the iterator strips the prefix from the keys.
-func IteratePrefixStripped(db DB, prefix []byte) Iterator {
+func IteratePrefixStripped(db DBMoj, prefix []byte) Iterator {
 	start, end := ...
 	return newPrefixIterator(prefix, start, end, IteratePrefix(db, prefix))
 }
@@ -35,11 +35,11 @@ func IteratePrefixStripped(db DB, prefix []byte) Iterator {
 type prefixDB struct {
 	mtx    sync.Mutex
 	prefix []byte
-	db     DB
+	db     DBMoj
 }
 
-// NewPrefixDB lets you namespace multiple DBs within a single DB.
-func NewPrefixDB(db DB, prefix []byte) *prefixDB {
+// NewPrefixDB lets you namespace multiple DBs within a single DBMoj.
+func NewPrefixDB(db DBMoj, prefix []byte) *prefixDB {
 	return &prefixDB{
 		prefix: prefix,
 		db:     db,
@@ -51,7 +51,7 @@ func (pdb *prefixDB) Mutex() *sync.Mutex {
 	return &(pdb.mtx)
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (pdb *prefixDB) Get(key []byte) []byte {
 	pdb.mtx.Lock()
 	defer pdb.mtx.Unlock()
@@ -61,7 +61,7 @@ func (pdb *prefixDB) Get(key []byte) []byte {
 	return value
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (pdb *prefixDB) Has(key []byte) bool {
 	pdb.mtx.Lock()
 	defer pdb.mtx.Unlock()
@@ -69,7 +69,7 @@ func (pdb *prefixDB) Has(key []byte) bool {
 	return pdb.db.Has(pdb.prefixed(key))
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (pdb *prefixDB) Set(key []byte, value []byte) {
 	pdb.mtx.Lock()
 	defer pdb.mtx.Unlock()
@@ -78,7 +78,7 @@ func (pdb *prefixDB) Set(key []byte, value []byte) {
 	pdb.db.Set(pkey, value)
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (pdb *prefixDB) SetSync(key []byte, value []byte) {
 	pdb.mtx.Lock()
 	defer pdb.mtx.Unlock()
@@ -86,7 +86,7 @@ func (pdb *prefixDB) SetSync(key []byte, value []byte) {
 	pdb.db.SetSync(pdb.prefixed(key), value)
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (pdb *prefixDB) Delete(key []byte) {
 	pdb.mtx.Lock()
 	defer pdb.mtx.Unlock()
@@ -94,7 +94,7 @@ func (pdb *prefixDB) Delete(key []byte) {
 	pdb.db.Delete(pdb.prefixed(key))
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (pdb *prefixDB) DeleteSync(key []byte) {
 	pdb.mtx.Lock()
 	defer pdb.mtx.Unlock()
@@ -102,7 +102,7 @@ func (pdb *prefixDB) DeleteSync(key []byte) {
 	pdb.db.DeleteSync(pdb.prefixed(key))
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (pdb *prefixDB) Iterator(start, end []byte) Iterator {
 	pdb.mtx.Lock()
 	defer pdb.mtx.Unlock()
@@ -125,7 +125,7 @@ func (pdb *prefixDB) Iterator(start, end []byte) Iterator {
 	)
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (pdb *prefixDB) ReverseIterator(start, end []byte) Iterator {
 	pdb.mtx.Lock()
 	defer pdb.mtx.Unlock()
@@ -146,8 +146,8 @@ func (pdb *prefixDB) ReverseIterator(start, end []byte) Iterator {
 	)
 }
 
-// Implements DB.
-// Panics if the underlying DB is not an
+// Implements DBMoj.
+// Panics if the underlying DBMoj is not an
 // atomicSetDeleter.
 func (pdb *prefixDB) NewBatch() Batch {
 	pdb.mtx.Lock()
@@ -178,7 +178,7 @@ func (pdb *prefixDB) DeleteNoLockSync(key []byte) {
 }
 */
 
-// Implements DB.
+// Implements DBMoj.
 func (pdb *prefixDB) Close() {
 	pdb.mtx.Lock()
 	defer pdb.mtx.Unlock()
@@ -186,7 +186,7 @@ func (pdb *prefixDB) Close() {
 	pdb.db.Close()
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (pdb *prefixDB) Print() {
 	fmt.Printf("prefix: %X\n", pdb.prefix)
 
@@ -199,7 +199,7 @@ func (pdb *prefixDB) Print() {
 	}
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (pdb *prefixDB) Stats() map[string]string {
 	stats := make(map[string]string)
 	stats["prefixdb.prefix.string"] = string(pdb.prefix)

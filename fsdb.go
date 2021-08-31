@@ -18,13 +18,13 @@ const (
 )
 
 func init() {
-	registerDBCreator(FSDBBackend, func(name, dir string) (DB, error) {
+	registerDBCreator(FSDBBackend, func(name, dir string) (DBMoj, error) {
 		dbPath := filepath.Join(dir, name+".db")
 		return NewFSDB(dbPath), nil
 	}, false)
 }
 
-var _ DB = (*FSDB)(nil)
+var _ DBMoj = (*FSDB)(nil)
 
 // It's slow.
 type FSDB struct {

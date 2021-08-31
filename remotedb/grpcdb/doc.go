@@ -1,10 +1,10 @@
 /*
-grpcdb is the distribution of Tendermint's db.DB instances using
-the gRPC transport to decouple local db.DB usages from applications,
+grpcdb is the distribution of Tendermint's db.DBMoj instances using
+the gRPC transport to decouple local db.DBMoj usages from applications,
 to using them over a network in a highly performant manner.
 
 grpcdb allows users to initialize a database's server like
-they would locally and invoke the respective methods of db.DB.
+they would locally and invoke the respective methods of db.DBMoj.
 
 Most users shouldn't use this package, but should instead use
 remotedb. Only the lower level users and database server deployers

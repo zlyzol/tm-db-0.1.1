@@ -34,7 +34,7 @@ const (
 	BoltDBBackend DBBackendType = "boltdb"
 )
 
-type dbCreator func(name string, dir string) (DB, error)
+type dbCreator func(name string, dir string) (DBMoj, error)
 
 var backends = map[DBBackendType]dbCreator{}
 
@@ -50,7 +50,7 @@ func registerDBCreator(backend DBBackendType, creator dbCreator, force bool) {
 // NOTE: function panics if:
 //   - backend is unknown (not registered)
 //   - creator function, provided during registration, returns error
-func NewDB(name string, backend DBBackendType, dir string) DB {
+func NewDB(name string, backend DBBackendType, dir string) DBMoj {
 	dbCreator, ok := backends[backend]
 	if !ok {
 		keys := make([]string, len(backends))
@@ -64,7 +64,7 @@ func NewDB(name string, backend DBBackendType, dir string) DB {
 
 	db, err := dbCreator(name, dir)
 	if err != nil {
-		panic(fmt.Sprintf("Error initializing DB: %v", err))
+		panic(fmt.Sprintf("Error initializing DBMoj: %v", err))
 	}
 	return db
 }

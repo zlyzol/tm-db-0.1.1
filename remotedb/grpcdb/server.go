@@ -41,7 +41,7 @@ func NewServer(cert, key string, opts ...grpc.ServerOption) (*grpc.Server, error
 
 type server struct {
 	mu sync.Mutex
-	db db.DB
+	db db.DBMoj
 }
 
 var _ protodb.DBServer = (*server)(nil)
@@ -49,7 +49,7 @@ var _ protodb.DBServer = (*server)(nil)
 // Init initializes the server's database. Only one type of database
 // can be initialized per server.
 //
-// Dir is the directory on the file system in which the DB will be stored(if backed by disk) (TODO: remove)
+// Dir is the directory on the file system in which the DBMoj will be stored(if backed by disk) (TODO: remove)
 //
 // Name is representative filesystem entry's basepath
 //

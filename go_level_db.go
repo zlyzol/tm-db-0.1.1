@@ -12,13 +12,13 @@ import (
 )
 
 func init() {
-	dbCreator := func(name string, dir string) (DB, error) {
+	dbCreator := func(name string, dir string) (DBMoj, error) {
 		return NewGoLevelDB(name, dir)
 	}
 	registerDBCreator(GoLevelDBBackend, dbCreator, false)
 }
 
-var _ DB = (*GoLevelDB)(nil)
+var _ DBMoj = (*GoLevelDB)(nil)
 
 type GoLevelDB struct {
 	db *leveldb.DB
@@ -40,7 +40,7 @@ func NewGoLevelDBWithOpts(name string, dir string, o *opt.Options) (*GoLevelDB, 
 	return database, nil
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (db *GoLevelDB) Get(key []byte) []byte {
 	key = nonNilBytes(key)
 	res, err := db.db.Get(key, nil)
@@ -53,12 +53,12 @@ func (db *GoLevelDB) Get(key []byte) []byte {
 	return res
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (db *GoLevelDB) Has(key []byte) bool {
 	return db.Get(key) != nil
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (db *GoLevelDB) Set(key []byte, value []byte) {
 	key = nonNilBytes(key)
 	value = nonNilBytes(value)
@@ -68,7 +68,7 @@ func (db *GoLevelDB) Set(key []byte, value []byte) {
 	}
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (db *GoLevelDB) SetSync(key []byte, value []byte) {
 	key = nonNilBytes(key)
 	value = nonNilBytes(value)
@@ -78,7 +78,7 @@ func (db *GoLevelDB) SetSync(key []byte, value []byte) {
 	}
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (db *GoLevelDB) Delete(key []byte) {
 	key = nonNilBytes(key)
 	err := db.db.Delete(key, nil)
@@ -87,7 +87,7 @@ func (db *GoLevelDB) Delete(key []byte) {
 	}
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (db *GoLevelDB) DeleteSync(key []byte) {
 	key = nonNilBytes(key)
 	err := db.db.Delete(key, &opt.WriteOptions{Sync: true})
@@ -96,16 +96,16 @@ func (db *GoLevelDB) DeleteSync(key []byte) {
 	}
 }
 
-func (db *GoLevelDB) DB() *leveldb.DB {
+func (db *GoLevelDB) DBMoj() *leveldb.DB {
 	return db.db
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (db *GoLevelDB) Close() {
 	db.db.Close()
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (db *GoLevelDB) Print() {
 	str, _ := db.db.GetProperty("leveldb.stats")
 	fmt.Printf("%v\n", str)
@@ -118,7 +118,7 @@ func (db *GoLevelDB) Print() {
 	}
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (db *GoLevelDB) Stats() map[string]string {
 	keys := []string{
 		"leveldb.num-files-at-level{n}",
@@ -144,7 +144,7 @@ func (db *GoLevelDB) Stats() map[string]string {
 //----------------------------------------
 // Batch
 
-// Implements DB.
+// Implements DBMoj.
 func (db *GoLevelDB) NewBatch() Batch {
 	batch := new(leveldb.Batch)
 	return &goLevelDBBatch{db, batch}
@@ -190,13 +190,13 @@ func (mBatch *goLevelDBBatch) Close() {}
 // NOTE This is almost identical to db/c_level_db.Iterator
 // Before creating a third version, refactor.
 
-// Implements DB.
+// Implements DBMoj.
 func (db *GoLevelDB) Iterator(start, end []byte) Iterator {
 	itr := db.db.NewIterator(nil, nil)
 	return newGoLevelDBIterator(itr, start, end, false)
 }
 
-// Implements DB.
+// Implements DBMoj.
 func (db *GoLevelDB) ReverseIterator(start, end []byte) Iterator {
 	itr := db.db.NewIterator(nil, nil)
 	return newGoLevelDBIterator(itr, start, end, true)
@@ -256,7 +256,7 @@ func (itr *goLevelDBIterator) Valid() bool {
 		return false
 	}
 
-	// Panic on DB error.  No way to recover.
+	// Panic on DBMoj error.  No way to recover.
 	itr.assertNoError()
 
 	// If source is invalid, invalid.
